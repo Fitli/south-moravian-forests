@@ -48,7 +48,7 @@ var mapmaxR = 0
 var mapmaxG = 128
 var mapmaxB = 0
 
-d3.csv("./public/filtered.csv")
+d3.csv("./public/trees.csv")
     .row(function(d) { return {
       strom : d["strom"],
       plocha : +d["plocha"],
@@ -114,17 +114,7 @@ function init(callback) {
   //Init selections
   selectedRegion = "all"
   selectedRegionName = "vše"
-  selectedTree = "-"
-
-  //Find highest value
-  topValue = 0;
-  data.forEach(function(object){
-    for(var key in object) {
-      if (key != "date") {
-        if(object[key]>topValue) topValue = object[key];
-      }
-    }
-  });
+  selectedTree = null
 
   callback();
 }
