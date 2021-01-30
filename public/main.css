@@ -1,0 +1,85 @@
+.map { 
+	/*float: left; */
+	/*max-width: 50%; */
+	/*max-height: 95vh; */
+	/*height: 95vh;*/
+} 
+
+body{
+	background: white;
+	/*margin-top:50px;*/
+	font: 15px "Trebuchet MS";
+	color:black;
+
+}
+
+
+#left_column{
+    width:33%;
+    float:left;
+}
+#right_column{
+    width:66%;
+    float:left;
+}
+#map_div{
+    width:95%;
+    height:87vh;
+    /*border:1px solid red;*/
+    /*margin-right:10px;*/
+    float:center;
+}
+#source_div{
+    width:100%;
+    height:10vh;
+    /*border:1px solid red;*/
+    /*margin-right:10px;*/
+    float:left;
+}
+
+#text_div, #barchart_div{
+    width:100%;
+    /*border:1px solid red;*/
+    font-size: calc(3vh);
+    float:left;
+}
+
+#text_div{
+    height:10vh;
+}
+
+#barchart_div{
+    height:87vh;
+}
+
+#map{
+    /*width: 200%;*/
+}
+
+.headline, .subline{
+  display: block;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-family: 'PT Sans',sans-serif;
+  opacity: 0.8;
+}
+
+.headline{
+  /*font-size: 4em;*/
+  /*font-size: 4vw;*/
+  
+  font-weight: bold;
+}
+
+.subline{
+  font-size: 50%;
+  font-weight: thin;
+}
+
+.label{
+  font-family: 'PT Sans',sans-serif;
+  opacity: 1;
+  font-size: 30%;
+}
