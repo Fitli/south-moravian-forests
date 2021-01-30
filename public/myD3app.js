@@ -10,6 +10,7 @@ var heatMapArea;
 //D3.js svg elements
 var selectedAreaText;
 var selectedTreeText;
+var areaText;
 var averageAgeText;
 var averageHeightText;
 var averageWidthText;
@@ -306,14 +307,17 @@ function updateBarChart(region, oldRegion){
 
   for (let i = 0; i < data.length; i++){
       if (data[i]["strom"] == selectedTree && data[i]["obec"] == selectedRegion) {
-            averageAgeText = barChartArea.append("text")
+            areaText = barChartArea.append("text")
                     .attrs({dx: thisCanvasWidth*0.6, dy: "1em", class: "subline"})
+                    .text("Plocha porostu: " + data[i]["plocha"] + " ha");
+            averageAgeText = barChartArea.append("text")
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "2.3em", class: "subline"})
                     .text("Průměrný věk: " + data[i]["vek"] + " let");
             averageHeightText = barChartArea.append("text")
-                    .attrs({dx: thisCanvasWidth*0.6, dy: "2.3em", class: "subline"})
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "3.6em", class: "subline"})
                     .text("Průměrná výška: " + data[i]["vyska"] + " m");
             averageWidthText= barChartArea.append("text")
-                    .attrs({dx: thisCanvasWidth*0.6, dy: "3.6em", class: "subline"})
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "4.9em", class: "subline"})
                     .text("Průměrná šířka: " + data[i]["sirka"] + " cm");
       }
   }
@@ -384,6 +388,7 @@ function barChartClick(tree){
          .text("Vybraný strom: " + treeNames[tree]);
   
   if(averageAgeText) {
+    areaText.remove();
     averageAgeText.remove();
     averageWidthText.remove();
     averageHeightText.remove();
@@ -394,14 +399,17 @@ function barChartClick(tree){
   for (let i = 0; i < data.length; i++){
       if (data[i]["strom"] == selectedTree && data[i]["obec"] == selectedRegion) {
           console.log(selectedTree, selectedRegion)
-            averageAgeText = barChartArea.append("text")
+            areaText = barChartArea.append("text")
                     .attrs({dx: thisCanvasWidth*0.6, dy: "1em", class: "subline"})
+                    .text("Plocha porostu: " + data[i]["plocha"] + " ha");
+            averageAgeText = barChartArea.append("text")
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "2.3em", class: "subline"})
                     .text("Průměrný věk: " + data[i]["vek"] + " let");
             averageHeightText = barChartArea.append("text")
-                    .attrs({dx: thisCanvasWidth*0.6, dy: "2.3em", class: "subline"})
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "3.6em", class: "subline"})
                     .text("Průměrná výška: " + data[i]["vyska"] + " m");
             averageWidthText= barChartArea.append("text")
-                    .attrs({dx: thisCanvasWidth*0.6, dy: "3.6em", class: "subline"})
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "4.9em", class: "subline"})
                     .text("Průměrná šířka: " + data[i]["sirka"] + " cm");
       }
   }
