@@ -332,10 +332,16 @@ function mapClick(region){
   INTERACTION - barchart
 ----------------------*/
 function barChartClick(tree){
-  d3.select("body").select("#"+selectedTree+"_box").style("fill", barChartCol);
+  d3.select("body").select("#"+selectedTree+"_box")
+          .transition()
+          .duration(500)
+          .style("fill", barChartCol);
   selectedTree = tree;
   console.log(tree)
-  d3.select("body").select("#"+tree+"_box").style("fill", barChartColSelected);
+  d3.select("body").select("#"+tree+"_box")
+          .transition()
+          .duration(500)
+          .style("fill", barChartColSelected);
   let max = 0;
   for(var i = 0; i<data.length; i++) {
       if(data[i]["strom"] == tree && data[i]["plocha"] > max) {
@@ -349,7 +355,10 @@ function barChartClick(tree){
           let colG = Math.round((1-coef) * mapminG + coef * mapmaxG)
           let colB = Math.round((1-coef) * mapminB + coef * mapmaxB)
           let color = d3.color("rgb(" + colR + "," + colG + "," + colB + ")");
-          d3.select("body").select("#"+data[i]["obec"]).style("fill", color);
+          d3.select("body").select("#"+data[i]["obec"])
+          .transition()
+          .duration(500)
+          .style("fill", color);
       }
   }
   
