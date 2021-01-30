@@ -9,6 +9,10 @@ var heatMapArea;
 
 //D3.js svg elements
 var selectedAreaText;
+var selectedTreeText;
+var averageAgeText;
+var averageHeightText;
+var averageWidthText;
 
 //Variables for selection
 var selectedRegion;
@@ -53,7 +57,10 @@ d3.csv("./public/trees.csv")
     .row(function(d) { return {
       strom : d["strom"],
       plocha : +d["plocha"],
-      obec : d["obec"]
+      obec : d["obec"],
+      vek : +d["vek"],
+      sirka : +d["sirka"],
+      vyska : +d["vyska"]
     }; 
   }).get(function(error, rows) { 
       
@@ -115,7 +122,7 @@ function init(callback) {
   //Init selections
   selectedRegion = "all"
   selectedRegionName = "vše"
-  selectedTree = null
+  selectedTree = "-"
   firstRun = false
 
   callback();
@@ -146,17 +153,11 @@ function drawTextInfo(){
 
   //Draw selection information
   selectedAreaText = textArea.append("text")
-         .attrs({dx: 20, dy: "4.8em", class: "subline"})
+         .attrs({dx: 20, dy: "3.5em", class: "subline"})
          .text("Obec s rozšířenou působností: " + selectedRegionName);
   selectedTreeText = textArea.append("text")
-         .attrs({dx: 20, dy: "6.1em", class: "subline"})
+         .attrs({dx: 20, dy: "4.8em", class: "subline"})
          .text("Vybraný strom: " + selectedTree);
-         
-  let thisCanvasWidth = barChartArea.node().clientWidth;
-  console.log("pes")
-  treeInfoText = barChartArea.append("text")
-         .attrs({dx: 20, dy: "6.1em", class: "subline"})
-         .text("pes: " + selectedTree);
 }
 
 
@@ -302,6 +303,20 @@ function updateBarChart(region, oldRegion){
             .duration(1000) //Duration in ms
             .attrs({ y: thisCanvasHeight - height - pictureHeight});
     }
+
+  for (let i = 0; i < data.length; i++){
+      if (data[i]["strom"] == selectedTree && data[i]["obec"] == selectedRegion) {
+            averageAgeText = barChartArea.append("text")
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "1em", class: "subline"})
+                    .text("Průměrný věk: " + data[i]["vek"] + " let");
+            averageHeightText = barChartArea.append("text")
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "2.3em", class: "subline"})
+                    .text("Průměrná výška: " + data[i]["vyska"] + " m");
+            averageWidthText= barChartArea.append("text")
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "3.6em", class: "subline"})
+                    .text("Průměrná šířka: " + data[i]["sirka"] + " cm");
+      }
+  }
 }
 
 
@@ -322,7 +337,7 @@ function mapClick(region){
     selectedAreaText.remove();
     
     selectedAreaText = textArea.append("text")
-         .attrs({dx: 20, dy: "4.8em", class: "subline"})
+         .attrs({dx: 20, dy: "3.5em", class: "subline"})
          .text("Obec s rozšířenou působností: " + selectedRegionName);
     updateBarChart(selectedRegion, oldRegion);
 
@@ -365,8 +380,31 @@ function barChartClick(tree){
   selectedTreeText.remove();
     
   selectedTreeText = textArea.append("text")
-         .attrs({dx: 20, dy: "6.1em", class: "subline"})
+         .attrs({dx: 20, dy: "4.8em", class: "subline"})
          .text("Vybraný strom: " + treeNames[tree]);
+  
+  if(averageAgeText) {
+    averageAgeText.remove();
+    averageWidthText.remove();
+    averageHeightText.remove();
+  }
+         
+  
+  let thisCanvasWidth = barChartArea.node().clientWidth;
+  for (let i = 0; i < data.length; i++){
+      if (data[i]["strom"] == selectedTree && data[i]["obec"] == selectedRegion) {
+          console.log(selectedTree, selectedRegion)
+            averageAgeText = barChartArea.append("text")
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "1em", class: "subline"})
+                    .text("Průměrný věk: " + data[i]["vek"] + " let");
+            averageHeightText = barChartArea.append("text")
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "2.3em", class: "subline"})
+                    .text("Průměrná výška: " + data[i]["vyska"] + " m");
+            averageWidthText= barChartArea.append("text")
+                    .attrs({dx: thisCanvasWidth*0.6, dy: "3.6em", class: "subline"})
+                    .text("Průměrná šířka: " + data[i]["sirka"] + " cm");
+      }
+  }
 }
 
 
