@@ -40,16 +40,16 @@ body{
 #text_div, #barchart_div{
     width:100%;
     /*border:1px solid red;*/
-    font-size: calc(3vh);
+    font-size: calc(5vh);
     float:left;
 }
 
 #text_div{
-    height:10vh;
+    height:15vh;
 }
 
 #barchart_div{
-    height:87vh;
+    height:82vh;
 }
 
 #map{
