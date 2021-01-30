@@ -1,5 +1,6 @@
 //Variable containing reference to data
 var data;
+var firstRun;
 
 //D3.js canvases
 var textArea;
@@ -115,6 +116,7 @@ function init(callback) {
   selectedRegion = "all"
   selectedRegionName = "vše"
   selectedTree = null
+  firstRun = false
 
   callback();
 }
@@ -162,7 +164,7 @@ function drawTextInfo(){
   BAR CHART
 ----------------------*/
 function drawBarChart(){
-  updateBarChart(selectedRegion);
+  updateBarChart(selectedRegion, selectedRegion);
 }
 
 function getSums() {
@@ -188,7 +190,7 @@ function getAreas(region) {
     return areas
 }
 
-function updateBarChart(region){
+function updateBarChart(region, oldRegion){
     barChartArea.remove()
     barChartArea = d3.select("#barchart_div").append("svg")
                                     .attr("width",d3.select("#barchart_div").node().clientWidth)
@@ -209,6 +211,9 @@ function updateBarChart(region){
     console.log(region)
     
     let areaSizes = {}
+    let areaSizesOld = {}
+    
+    
     
     if (region == "all") {
         areaSizes = getSums()
@@ -218,6 +223,7 @@ function updateBarChart(region){
     }
     
     let max = 0
+    let maxOld = 0
     
     for(tree in areaSizes) {
         if(areaSizes[tree] > max) {
@@ -225,41 +231,76 @@ function updateBarChart(region){
         }
     }
     
+    console.log(oldRegion)
+    if (firstRun == true) {
+        firstRun=false;
+        maxOld = max;
+        let areaSizesOld = areaSizes;
+    }
+    
+    else {
+        if (oldRegion == "all") {
+            areaSizesOld = getSums()
+        }
+        else {
+            areaSizesOld = getAreas(oldRegion)
+        }
+        
+        for(tree in areaSizesOld) {
+            if(areaSizesOld[tree] > maxOld) {
+                maxOld = areaSizesOld[tree]
+            }
+        }
+    }
+    
     for(let tree in areaSizes) {
         let plocha = areaSizes[tree]
+        let plochaOld = areaSizesOld[tree]
         let pictureHeight = thisRectWidth*65.5/40.5
+        let heightOld = (thisCanvasHeight * 0.9 - pictureHeight) * plochaOld/maxOld
         let height = (thisCanvasHeight * 0.9 - pictureHeight) * plocha/max
         let treeIndex = treeArray.indexOf(tree)
         let color = barChartCol
         if (tree == selectedTree) {
             color = barChartColSelected
         }
-        barChartArea.append('rect')
+        let rect = barChartArea.append('rect')
             .attrs({ 
                 x: thisRectWidth*treeIndex, 
-                y: thisCanvasHeight - height, 
+                y: thisCanvasHeight - heightOld, 
                 width: thisRectWidth, 
-                height: height, 
+                height: heightOld, 
                 fill: color,
                 id: tree+"_box"
-            })
-            .on("click", function(){
+            });
+        rect.append("title")
+                .text(function(d) { return treeNames[tree] + ": " + plocha + " ha"; });
+        rect.on("click", function(){
                 barChartClick(tree);
             })
-            .append("title")
-            .text(function(d) { return treeNames[tree] + ": " + plocha + " ha"; });
+            .transition() //Animation function
+            .duration(1000) //Duration in ms
+            .attrs({ y: thisCanvasHeight - height, //Adjust only necessary attributes
+                    height: height});
+        
         img = barChartArea.append("svg:image")
             .attr("xlink:href", "tree_pics/"+tree+".svg")
             .attr("width", thisRectWidth)
             .attr("height", "auto")
             .attr("x", thisRectWidth*treeIndex)
-            .attr("y",thisCanvasHeight - height - pictureHeight)
-            .attr("viewbox", "0 0 100 100")
-            .on("click", function(){
+            .attr("y",thisCanvasHeight - heightOld - pictureHeight)
+            .attr("viewbox", "0 0 100 100");
+        img.on("click", function(){
+                barChartClick(tree);
+            });
+        img.append("title")
+                .text(function(d) { return treeNames[tree] + ": " + plocha + " ha"; });
+        img.on("click", function(){
                 barChartClick(tree);
             })
-            .append("title")
-                .text(function(d) { return treeNames[tree] + ": " + plocha + " ha"; });
+            .transition() //Animation function
+            .duration(1000) //Duration in ms
+            .attrs({ y: thisCanvasHeight - height - pictureHeight});
     }
 }
 
@@ -268,6 +309,7 @@ function updateBarChart(region){
   INTERACTION - map
 ----------------------*/
 function mapClick(region){
+    oldRegion = selectedRegion
     if(selectedRegion == region.id) {
         selectedRegion = "all"
         selectedRegionName = "vše"
@@ -282,7 +324,7 @@ function mapClick(region){
     selectedAreaText = textArea.append("text")
          .attrs({dx: 20, dy: "4.8em", class: "subline"})
          .text("Obec s rozšířenou působností: " + selectedRegionName);
-    updateBarChart(selectedRegion);
+    updateBarChart(selectedRegion, oldRegion);
 
 }
 
